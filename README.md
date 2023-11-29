@@ -3,9 +3,13 @@ workflow tentative for spectra inversion using IDSM and adjoint method - work in
 
 # Install required packages
 conda env create -f environment.yml
+
 conda activate specinv
+
 cd ./Scripts/pythonlibs
+
 conda develop . # Adds the local libraries to the PYTHONPATH
+
 cd ../../
 
 # Run data download
