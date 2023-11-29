@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+ <FDSNStationXML xmlns="http://www.fdsn.org/xml/station/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:iris="http://www.fdsn.org/xml/station/1/iris" xsi:schemaLocation="http://www.fdsn.org/xml/station/1 http://www.fdsn.org/xml/station/fdsn-station-1.1.xsd" schemaVersion="1.1">
+  <Source>IRIS-DMC</Source>
+  <Sender>IRIS-DMC</Sender>
+  <Module>IRIS WEB SERVICE: fdsnws-station | version: 1.1.52</Module>
+  <ModuleURI></ModuleURI>
+  <Created>2023-11-29T01:01:58.5591</Created>
+  <Network code="G" startDate="1982-01-01T00:00:00.0000" alternateCode="GEOSCOPE" restrictedStatus="open">
+   <Description>GEOSCOPE, French Global Network of Seismological Broadband Stations (GEOSCOPE)</Description>
+   <Identifier type="DOI">10.18715/GEOSCOPE.G
+   </Identifier>
+   <TotalNumberStations>55</TotalNumberStations>
+   <SelectedNumberStations>1</SelectedNumberStations>
+   <Station code="FOMA" startDate="2008-09-01T00:00:00.0000" restrictedStatus="open" iris:alternateNetworkCodes="_FDSN-ALL,.UNRESTRICTED">
+    <Comment>
+     <Value>Data quality is poor</Value>
+     <BeginEffectiveTime>2015-10-17T00:00:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2017-01-30T23:59:59.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Occasional data loss due to transmission issues</Value>
+     <BeginEffectiveTime>2010-06-22T00:00:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2010-09-25T00:00:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Occasional data loss due to stormy weather</Value>
+     <BeginEffectiveTime>2011-04-06T03:30:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2011-04-06T06:00:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Occasional data loss</Value>
+     <BeginEffectiveTime>2011-11-08T05:10:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2011-11-08T06:15:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Occasional data loss</Value>
+     <BeginEffectiveTime>2011-08-18T06:35:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2011-08-18T07:05:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Occasional data loss</Value>
+     <BeginEffectiveTime>2011-02-28T14:00:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2011-02-28T16:10:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Occasional data loss</Value>
+     <BeginEffectiveTime>2010-12-27T18:45:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2010-12-27T19:15:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Occasional data loss</Value>
+     <BeginEffectiveTime>2010-12-25T18:00:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2010-12-25T19:40:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Occasional data loss</Value>
+     <BeginEffectiveTime>2010-12-11T14:37:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2010-12-11T15:06:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Occasional data loss</Value>
+     <BeginEffectiveTime>2010-12-05T18:20:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2010-12-05T18:42:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Occasional data loss</Value>
+     <BeginEffectiveTime>2010-11-13T21:00:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2010-11-13T23:00:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>The station is temporarily interrupted</Value>
+     <BeginEffectiveTime>2011-04-08T11:00:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2011-05-19T09:00:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Maintenance in progress.</Value>
+     <BeginEffectiveTime>2009-11-28T07:40:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2009-12-03T20:00:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Station is down.</Value>
+     <BeginEffectiveTime>2015-08-14T20:26:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2015-10-17T00:00:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Station is down.</Value>
+     <BeginEffectiveTime>2013-02-23T01:00:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2013-05-22T00:00:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Station is down.</Value>
+     <BeginEffectiveTime>2010-05-01T05:25:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2010-05-26T13:07:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Station is down.</Value>
+     <BeginEffectiveTime>2009-12-01T12:30:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2009-12-01T14:12:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Station is down.</Value>
+     <BeginEffectiveTime>2009-11-28T07:40:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2009-11-30T14:06:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Station is down.</Value>
+     <BeginEffectiveTime>2009-11-03T14:34:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2009-11-03T14:58:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Station is down.</Value>
+     <BeginEffectiveTime>2009-02-09T23:47:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2009-02-13T05:00:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Occasional data loss</Value>
+     <BeginEffectiveTime>2011-11-08T05:10:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2011-11-08T06:15:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Occasional data loss</Value>
+     <BeginEffectiveTime>2011-08-18T06:35:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2011-08-18T07:05:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Occasional data loss</Value>
+     <BeginEffectiveTime>2011-02-28T14:00:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2011-02-28T16:10:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Occasional data loss</Value>
+     <BeginEffectiveTime>2010-12-27T18:45:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2010-12-27T19:15:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Occasional data loss</Value>
+     <BeginEffectiveTime>2010-12-25T18:00:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2010-12-25T19:40:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Occasional data loss</Value>
+     <BeginEffectiveTime>2010-12-11T14:37:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2010-12-11T15:06:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Occasional data loss</Value>
+     <BeginEffectiveTime>2010-12-05T18:20:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2010-12-05T18:42:00.0000</EndEffectiveTime>
+    </Comment>
+    <Comment>
+     <Value>Occasional data loss</Value>
+     <BeginEffectiveTime>2010-11-13T21:00:00.0000</BeginEffectiveTime>
+     <EndEffectiveTime>2010-11-13T23:00:00.0000</EndEffectiveTime>
+    </Comment>
+    <Latitude>-24.97565</Latitude>
+    <Longitude>46.978877</Longitude>
+    <Elevation>28.0</Elevation>
+    <Site>
+     <Name>Nahampoana Reserve - Fort Dauphin, Madagascar</Name>
+    </Site>
+    <CreationDate>2008-09-01T00:00:00.0000</CreationDate>
+    <TotalNumberChannels>17</TotalNumberChannels>
+    <SelectedNumberChannels>1</SelectedNumberChannels>
+    <Channel code="LHZ" locationCode="00" startDate="2008-09-01T00:00:00.0000" endDate="2017-01-31T00:00:00.0000" restrictedStatus="open">
+     <Comment>
+      <Value>Data quality is poor.</Value>
+      <BeginEffectiveTime>2013-10-31T05:45:00.0000</BeginEffectiveTime>
+      <EndEffectiveTime>2013-11-02T01:00:00.0000</EndEffectiveTime>
+     </Comment>
+     <Comment>
+      <Value>Glitches detected</Value>
+      <BeginEffectiveTime>2012-10-31T00:00:00.0000</BeginEffectiveTime>
+      <EndEffectiveTime>2012-11-19T00:00:00.0000</EndEffectiveTime>
+     </Comment>
+     <Comment>
+      <Value>Sensor calibration in progress</Value>
+      <BeginEffectiveTime>2012-11-19T15:00:00.0000</BeginEffectiveTime>
+      <EndEffectiveTime>2012-11-19T15:25:00.0000</EndEffectiveTime>
+     </Comment>
+     <Comment>
+      <Value>Sensor calibration in progress</Value>
+      <BeginEffectiveTime>2012-11-07T16:06:00.0000</BeginEffectiveTime>
+      <EndEffectiveTime>2012-11-07T16:16:00.0000</EndEffectiveTime>
+     </Comment>
+     <Latitude>-24.97565</Latitude>
+     <Longitude>46.978877</Longitude>
+     <Elevation>28</Elevation>
+     <Depth>0</Depth>
+     <Azimuth>0</Azimuth>
+     <Dip>-90</Dip>
+     <Type>CONTINUOUS</Type>
+     <Type>GEOPHYSICAL</Type>
+     <SampleRate>1E00</SampleRate>
+     <ClockDrift>1E-04</ClockDrift>
+     <Sensor>
+      <Description>STRECKEISEN STS2</Description>
+     </Sensor>
+     <Response>
+     <InstrumentSensitivity>
+       <Value>2.49503E9</Value>
+       <Frequency>0.03</Frequency>
+       <InputUnits>
+         <Name>m/s</Name>
+         <Description>VELOCITY in Meters Per Second</Description>
+       </InputUnits>
+       <OutputUnits>
+         <Name>counts</Name>
+         <Description>DIGITAL UNIT in Counts</Description>
+       </OutputUnits>
+     </InstrumentSensitivity>
+      <Stage number="1">
+      <PolesZeros>
+        <InputUnits>
+          <Name>m/s</Name>
+          <Description>VELOCITY in Meters Per Second</Description>
+        </InputUnits>
+        <OutputUnits>
+          <Name>V</Name>
+          <Description>Volts</Description>
+        </OutputUnits>
+        <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+        <NormalizationFactor>3.49567E17</NormalizationFactor>
+        <NormalizationFrequency unit="HERTZ">0.03</NormalizationFrequency>
+        <Zero number="0">
+          <Real minusError="0.0" plusError="0.0">0.0</Real>
+          <Imaginary minusError="0.0" plusError="0.0">0.0</Imaginary>
+        </Zero>
+        <Zero number="1">
+          <Real minusError="0.0" plusError="0.0">0.0</Real>
+          <Imaginary minusError="0.0" plusError="0.0">0.0</Imaginary>
+        </Zero>
+        <Zero number="2">
+          <Real minusError="0.0" plusError="0.0">-15.15</Real>
+          <Imaginary minusError="0.0" plusError="0.0">0.0</Imaginary>
+        </Zero>
+        <Zero number="3">
+          <Real minusError="0.0" plusError="0.0">-176.6</Real>
+          <Imaginary minusError="0.0" plusError="0.0">0.0</Imaginary>
+        </Zero>
+        <Zero number="4">
+          <Real minusError="0.0" plusError="0.0">-463.1</Real>
+          <Imaginary minusError="0.0" plusError="0.0">-430.5</Imaginary>
+        </Zero>
+        <Zero number="5">
+          <Real minusError="0.0" plusError="0.0">-463.1</Real>
+          <Imaginary minusError="0.0" plusError="0.0">430.5</Imaginary>
+        </Zero>
+        <Pole number="0">
+          <Real minusError="0.0" plusError="0.0">-0.037</Real>
+          <Imaginary minusError="0.0" plusError="0.0">-0.037</Imaginary>
+        </Pole>
+        <Pole number="1">
+          <Real minusError="0.0" plusError="0.0">-0.037</Real>
+          <Imaginary minusError="0.0" plusError="0.0">0.037</Imaginary>
+        </Pole>
+        <Pole number="2">
+          <Real minusError="0.0" plusError="0.0">-15.64</Real>
+          <Imaginary minusError="0.0" plusError="0.0">0.0</Imaginary>
+        </Pole>
+        <Pole number="3">
+          <Real minusError="0.0" plusError="0.0">-97.34</Real>
+          <Imaginary minusError="0.0" plusError="0.0">-400.7</Imaginary>
+        </Pole>
+        <Pole number="4">
+          <Real minusError="0.0" plusError="0.0">-97.34</Real>
+          <Imaginary minusError="0.0" plusError="0.0">400.7</Imaginary>
+        </Pole>
+        <Pole number="5">
+          <Real minusError="0.0" plusError="0.0">-374.8</Real>
+          <Imaginary minusError="0.0" plusError="0.0">0.0</Imaginary>
+        </Pole>
+        <Pole number="6">
+          <Real minusError="0.0" plusError="0.0">-520.3</Real>
+          <Imaginary minusError="0.0" plusError="0.0">0.0</Imaginary>
+        </Pole>
+        <Pole number="7">
+          <Real minusError="0.0" plusError="0.0">-10530.0</Real>
+          <Imaginary minusError="0.0" plusError="0.0">-10050.0</Imaginary>
+        </Pole>
+        <Pole number="8">
+          <Real minusError="0.0" plusError="0.0">-10530.0</Real>
+          <Imaginary minusError="0.0" plusError="0.0">10050.0</Imaginary>
+        </Pole>
+        <Pole number="9">
+          <Real minusError="0.0" plusError="0.0">-13300.0</Real>
+          <Imaginary minusError="0.0" plusError="0.0">0.0</Imaginary>
+        </Pole>
+        <Pole number="10">
+          <Real minusError="0.0" plusError="0.0">-255.097</Real>
+          <Imaginary minusError="0.0" plusError="0.0">0.0</Imaginary>
+        </Pole>
+      </PolesZeros>
+      <StageGain>
+        <Value>1500.0</Value>
+        <Frequency>0.03</Frequency>
+      </StageGain>
+
+      </Stage>
+      <Stage number="2">
+      <Coefficients>
+        <InputUnits>
+          <Name>V</Name>
+          <Description>Volts</Description>
+        </InputUnits>
+        <OutputUnits>
+          <Name>counts</Name>
+          <Description>DIGITAL UNIT in Counts</Description>
+        </OutputUnits>
+        <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+      </Coefficients>
+      <Decimation>
+        <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+        <Factor>1</Factor>
+        <Offset>0</Offset>
+        <Delay>0.0</Delay>
+        <Correction>0.0</Correction>
+      </Decimation>
+      <StageGain>
+        <Value>1677720.0</Value>
+        <Frequency>0.0</Frequency>
+      </StageGain>
+
+      </Stage>
+      <Stage number="3">
+      <Coefficients>
+        <InputUnits>
+          <Name>counts</Name>
+          <Description>DIGITAL UNIT in Counts</Description>
+        </InputUnits>
+        <OutputUnits>
+          <Name>counts</Name>
+          <Description>DIGITAL UNIT in Counts</Description>
+        </OutputUnits>
+        <CfTransferFunctionType>DIGITAL</CfTransferFunctionType>
+        <Numerator minusError="0.0" plusError="0.0">-1.22004E-16</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">3.37278E-11</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">-3.19094E-7</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">1.26313E-6</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">-1.48491E-5</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">0.00332199</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">0.00108323</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">-0.00624046</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">0.0126566</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">-0.0157663</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">0.00956762</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">0.010711</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">-0.0456425</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">0.0897523</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">-0.132437</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">0.155289</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">0.812371</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">0.185415</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">-0.140609</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">0.0897083</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">-0.0424397</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">0.00714001</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">0.0121051</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">-0.0169307</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">0.0127735</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">-0.00586424</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">6.45177E-4</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">0.00348713</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">-8.53058E-5</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">2.29713E-6</Numerator>
+        <Numerator minusError="0.0" plusError="0.0">-2.2583E-7</Numerator>
+      </Coefficients>
+      <Decimation>
+        <InputSampleRate unit="HERTZ">1.0</InputSampleRate>
+        <Factor>1</Factor>
+        <Offset>0</Offset>
+        <Delay>16.0</Delay>
+        <Correction>16.0</Correction>
+      </Decimation>
+      <StageGain>
+        <Value>1.0</Value>
+        <Frequency>0.0</Frequency>
+      </StageGain>
+
+      </Stage>
+     </Response>
+    </Channel>
+   </Station>
+  </Network>
+ </FDSNStationXML>
