@@ -24,7 +24,7 @@ This will process the data and compute amplitude spectra. These spectra will be 
 
 Example to plot a spectra from the asdf file once it was created:
 
-'''
+```
 with pyasdf.ASDFDataSet(<event_ID>_pro.h5, compression="gzip-3", mode='r+') as ds:
     spec_ds = ds.auxiliary_data.ProcessedSpectra[tr_id]
     sfreq = spec_ds.parameters["start_freq"]
@@ -35,4 +35,4 @@ with pyasdf.ASDFDataSet(<event_ID>_pro.h5, compression="gzip-3", mode='r+') as d
 
     plt.figure()
     plt.plot(freq_array, np.array(spec_ds.data))
-'''
+```
