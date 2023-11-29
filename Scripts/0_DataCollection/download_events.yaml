@@ -1,0 +1,8 @@
+basedir: '/data/SA/SpectraInversion/'
+
+event_ID: '201103110546A'
+event_name: 'Tohoku11'
+time_onset: '2011-03-11T05:47:32.8'
+
+lag: 5 # in hours
+duration: 128 # in hours

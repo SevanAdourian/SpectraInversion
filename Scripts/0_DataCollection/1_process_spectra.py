@@ -1,0 +1,182 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import sys
+import os
+import math
+import yaml
+import glob
+import pyasdf
+
+from scipy.signal import periodogram, coherence
+from scipy.optimize import fmin
+
+import ProcessSeismicData as PSD
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python script.py <yaml_file>")
+        sys.exit(1)
+
+    # Get the YAML file name from the command-line argument
+    yaml_file_name = sys.argv[1]
+    
+    # Load YAML content
+    param = PSD.load_yaml_file(yaml_file_name)    
+    
+    facf = param['taper_frequency_factor']
+    fact = param['taper_time_factor']
+
+    f1 = param['low_corner']/1.e3  # low corner
+    f2 = param['high_corner']/1.e3 # high corner
+    f12 = f1+facf*(f2-f1)
+    f21 = f2-facf*(f2-f1)
+
+    # Load asdf files
+    events = glob.glob(f"{param['basedir']}Data/*")
+
+    # Initialize the inventory for event
+    inv = []
+
+    print(f"All events are processed starting from {param['start_time_series']}h"
+          f"after the origin of the earthquake and for a duration of {param['end_time_series']}h")
+    # Begin loop on all events/asdf files
+    for _i, event_path in enumerate(events):
+        # Print some stuff here
+        event = os.path.basename(event_path)
+        print(f"Processing event {event}")
+
+        # load asdf
+        filename_asdf = f"{event_path}/asdf/{event}.h5"
+
+        # Make a copy of asdf because we will add spectra information to it
+        filename_asdf_pro = f"{event_path}/asdf/{event}_pro.h5"
+        os.system(f"cp {filename_asdf} {filename_asdf_pro}")
+        
+        with pyasdf.ASDFDataSet(filename_asdf_pro, compression="gzip-3", mode='r+') as ds:
+            for stations in ds.waveforms:
+                # Reconstruct inventory
+                inv += stations.StationXML
+
+                st = stations.raw_waveform
+                # Select the waveform data
+                for i, tr in enumerate(st):
+                    NFFT = 2 ** (math.ceil(math.log(tr.stats.npts, 2)))
+
+                    # demean/detrend
+                    tr = tr.detrend('demean')
+                    tr = tr.detrend('linear')
+                    
+                    # Remove instrument respones
+                    tr = tr.remove_response(inventory=inv, output='ACC', water_level=60, plot=False,
+                                            pre_filt=[0.0001, 0.00011, 0.0051, 0.0052])
+
+                    # Removing detiding because tides out of band
+                    # detiding_ds = int(1/(0.0001*2*tr.stats.delta))
+                    # tr = PSD.detide(tr, param['order_detiding'], detiding_ds, plot=False, plot_obspy=False)
+
+                    # Doing a second pass for windowing
+                    tr = PSD.trim_tr(tr, param['start_time_series'], param['end_time_series'], plot=False) # Trim
+                    tr = tr.taper(type=param['taper_type'], max_percentage=fact)
+                    tr = tr.detrend('linear')
+                                        
+                    # Compute fft
+                    f, acc = periodogram(tr.data, fs=tr.stats.sampling_rate, nfft=NFFT,
+                                       scaling='spectrum')
+                    f, acc = f[1:], acc[1:]
+
+                    # Hann windowing in frequency
+                    acc_fil = np.zeros(len(acc), dtype=float)
+                    for i in range(0,len(f)):
+                        hann_coeff = PSD.hann(f[i], f1, f12, f21, f2)
+                        acc_fil[i] = hann_coeff*acc[i]
+
+                    # Convert units to nm/s/s
+                    acc_amp = np.sqrt(acc_fil) * 1.e9
+                    f *= 1000.
+                    acc_win = acc_amp[(f >= param['low_corner']) & (f <= param['high_corner'])]
+                    f = f[(f >= param['low_corner']) & (f <= param['high_corner'])]
+                    
+                    # Check if we can do barometric corrections
+                    try:
+                        pr = stations.pressure[0]
+                        print("This station has also pressure data, can do corrections")
+                        
+                        # demean/detrend
+                        pr = pr.detrend('demean')
+                        pr = pr.detrend('linear')
+                        
+                        # Windowing
+                        pr = PSD.trim_tr(pr, param['start_time_series'], param['end_time_series'], plot=False) # Trim
+                        pr = pr.taper(type=param['taper_type'], max_percentage=fact)
+                        pr = pr.detrend('linear')
+                        
+                        # Compute FFT
+                        f, pres = periodogram(pr.data, fs=pr.stats.sampling_rate, nfft=NFFT,
+                                           scaling='spectrum')
+                        f, pres = f[1:], pres[1:]
+
+                        # Hann windowing in the frequency domain
+                        pres_fil = np.zeros(len(acc), dtype=float)
+                        for i in range(0,len(f)):
+                            hann_coeff = PSD.hann(f[i], f1, f12, f21, f2)
+                            pres_fil[i] = hann_coeff*pres[i]
+
+                        pres_amp = np.sqrt(pres_fil)
+                        f *= 1000. # We back in mHz
+                        pres_win = pres_amp[(f >= param['low_corner']) & (f <= param['high_corner'])]
+                        f = f[(f >= param['low_corner']) & (f <= param['high_corner'])]
+
+                        # Perform barometric correction
+                        def presscorrt(x):
+                            return acc_win - x*pres_win
+
+                        def resi(x):
+                            val = np.sum(presscorrt(x)**2)/len(presscorrt(x))
+                            return val
+                        
+                        # Computing minimizing coefficient
+                        bf = fmin(resi, [0.])
+                        # Correction applied here
+                        corrected = presscorrt(bf[0])
+                        spectrum = np.abs(corrected)
+                        frequencies = f
+
+                        # Plot to check
+                        # fig = plt.figure(1,figsize=(12,12))
+                        # plt.plot(f,np.abs(acc_win), label='Uncorrected')
+                        # plt.plot(f,spectrum, label='Corrected')
+                        # plt.xlabel('Frequency (mHz)')
+                        # plt.ylabel('Acceleration (nm/s/s)')
+                        # plt.title((tr.id).replace('.',' '))
+                        # plt.legend()
+                        # plt.savefig(f"{param['basedir']}/Figures/Spectra/{event}/{tr.id}.png",format='PNG',dpi=400)
+                        # plt.close()
+                        # plt.show()
+                        
+                    except pyasdf.WaveformNotInFileException as e:
+                        print("No barometer was found for this station, no correction is applied")
+                        spectrum = np.abs(acc_win)
+                        frequencies = f
+
+                        # Plot to check
+                        # fig = plt.figure(1,figsize=(12,12))
+                        # plt.plot(f,spectrum, label='Uncorrected')
+                        # plt.xlabel('Frequency (mHz)')
+                        # plt.ylabel('Acceleration (nm/s/s)')
+                        # plt.title((tr.id).replace('.',' '))
+                        # plt.legend()
+                        # plt.savefig(f"{param['basedir']}/Figures/Spectra/{event}/{tr.id}.png",format='PNG',dpi=400)
+                        # plt.close()
+                        # plt.show()
+
+                # Write spectra as auxiliary data
+                datatype = "ProcessedSpectra"
+                datapath = tr.id
+                dataparams = {
+                    "start_freq": f[0],
+                    "nfreq": len(f),
+                    "dfreq": f[2]-f[1]}
+                ds.add_auxiliary_data(data=spectrum, data_type=datatype,
+                                      path=datapath, parameters=dataparams)
+                
+            print(ds)
