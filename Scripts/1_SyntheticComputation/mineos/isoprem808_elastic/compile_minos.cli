@@ -1,0 +1,3 @@
+gfortran minos_bran_HY_HL.f -ffree-line-length-none -ffixed-form -std=legacy -fno-unsafe-math-optimizations -o minos_bran_HY_HL
+
+ifort minos_bran_HY_HL.f -132 -C -traceback -o minos_bran_HY_HL

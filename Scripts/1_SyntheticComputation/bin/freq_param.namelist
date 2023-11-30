@@ -1,0 +1,14 @@
+&freq_param
+f1 = 0.00
+f2 = 1.00 
+dt = 20
+df0 = 0.01
+wtb = 0.05
+t1 = 0
+t2 = 96
+central_frequency = 0.305
+integration_band = 0.03
+process_bool = 0
+station_file = 'station.info'
+cmt_file = 'cmt.info'
+/

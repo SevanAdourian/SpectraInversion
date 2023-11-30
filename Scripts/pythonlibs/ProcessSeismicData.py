@@ -164,17 +164,13 @@ def fcal(f1, f2, dt, tout, mex, qex):
         raise ValueError("f2 is greater than the Nyquist frequency for the time step")
     
     ep = mex / tout
-    print(f"ep = {ep}")
+    # print(f"ep = {ep}")
     df = ep / (2.0 * np.pi * qex)
-    print(f"df = {df}")
+    # print(f"df = {df}")
     # df = ep / qex
     nt = int(np.ceil(1.0 / (df * dt)))
-    print(f"nt = {nt}")
-    # ne = np.floor(math.log(nt) / math.log(2)) + 1
-    # print(f"ne = {ne}")
-    # nt = int(2 ** ne)
-    # print(f"nt2 = {nt}")
-    
+    # print(f"nt = {nt}")
+        
     # df = 1.0 / (nt * dt)
     # print(f"df2 = {df}")
     i1 = np.floor(f1 / df)

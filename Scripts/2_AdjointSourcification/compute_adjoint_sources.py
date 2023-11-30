@@ -33,12 +33,36 @@ def is_synthetic_computed(conf, event, stn):
 
     return synth_ok
 
-def process_synthetic(conf, spec):
+def process_synthetic(conf, freq_support, spec, dt, f1, f2, f12, f21, t1, t2, t12, t21, ep):
+    # From the IDSM computation, process the synthetic seismogram in the
+    # same way as data
 
-    return processed_synth_spec
+    nt = len(spec)
+    # Compute inverse fourier transform to get seismogram in velocity
+    seismogram = np.real(np.fft.ifft(spec))
+    time_support = np.arange(0, nt) * dt
 
-def compute_misfit(processed_synth_spec, data_spec_ds):
+    windowed_seismogram = np.zeros(nt,dtype=complex)
 
+    for i,t_value in np.ndenumerate(time_support):
+        hann_coeff = hann(t_value, t1, t12, t21, t2)
+        windowed_seismogram[i] = hann_coeff*seismogram[i]*np.exp(ep*t_value)
+
+    processed_spec = np.fft.fft(windowed_seismogram)
+    
+    return processed_spec
+
+def compute_misfit(synth_freq_array, processed_synth_spec, data_freq_array, data_spec_ds):
+    # We interpolate the spectra on the same frequency support as the synthetic
+    # The adjoint source should be sampled the same way in order to multiply it directly
+    # for the adjoint computation
+
+    data_spec = np.array(data_spec_ds.data)
+    interpolator = interp1d(data_freq_array, data_spec, kind='linear', fill_value='extrapolate')
+    interpolated_data_spec = interpolator(synth_freq_array)
+
+    adj_src = np.zeros(
+    adj_src = processed_synth_spec - interpolated_data_spec
     return adj_src
 
 def process_adjoint_sources(conf, l2_misfit):
@@ -58,7 +82,7 @@ if __name__ == "__main__":
     param = PSD.load_yaml_file(yaml_file_name)    
 
     # Generate sample data points
-    f1_inp = param['minimum_frequency']
+    f1_inp = param['minimum_frequency']/1.e3
     f2_inp = param['maximum_frequency']/1.e3
     t1_inp = param['start_time_series'] * 3600.
     t2_inp = param['end_time_series'] * 3600.
@@ -69,38 +93,14 @@ if __name__ == "__main__":
 
     f1 = param['low_corner']/1.e3  # low corner
     f2 = param['high_corner']/1.e3 # high corner
-    
-    # FCAL usage, can be unnormalized, we don't care here.
-    # f_norm = np.sqrt(6.6723e-11*np.pi*5515.)
-    # t_norm = 1./f_norm
-    
-    mex = 5
-    qex = 4
-    f1, f2, df, ep, nt, i1, i2 = PSD.fcal(f1_inp/f_norm, f2_inp/f_norm, dt/t_norm, t2_inp/t_norm, mex, qex)
-    
-    print(".... Frequency parameters:")
-    print(".... ... df (mHz) =", df)
-    print(".... ... nt       =", nt)
-    print(".... ... f1 (mHz) =", f1)
-    print(".... ... f2 (mHz) =", f2)
-    
+
     # Computation of all parameters
     f12 = f1+facf*(f2-f1)
     f21 = f2-facf*(f2-f1)
-    
-    # t1 = t1_inp/t_norm
-    # t2 = t2_inp/t_norm
-    # t12 = t1+fact*(t2-t1)
-    # t21 = t2-fact*(t2-t1)
-    # dt = dt/t_norm
-    # dw = df * 2. * np.pi
-    
-    ##################
-    # ntall = nt
-    # nt = int(i2 - i1)
-    # x = np.linspace(f1, f2, nt)
-    # x = np.concatenate((x,-np.flipud(x)[:-1]))
-    
+    t12 = t1+fact*(t2-t1)
+    t21 = t2-fact*(t2-t1)
+        
+    ##################    
     # Load asdf file
     events    = glob.glob(f"{param['basedir']}Data/*")
 

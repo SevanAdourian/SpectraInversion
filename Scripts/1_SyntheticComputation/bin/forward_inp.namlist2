@@ -1,0 +1,12 @@
+&forward_inp
+is_3d = .TRUE.
+is_3dQ = .FALSE.
+is_rotate = .TRUE.
+is_crust = .FALSE.
+is_cmb = .FALSE.
+model_3d = "lay808"
+model_3dQ = "dummy"
+mat_op = 2
+sbuild0 = 0
+sbuild1 = 6
+/
