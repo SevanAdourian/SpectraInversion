@@ -32,6 +32,7 @@ if __name__ == "__main__":
     f21 = f2-facf*(f2-f1)
 
     # Load asdf files
+    print(f"{param['basedir']}Data/*")
     events = glob.glob(f"{param['basedir']}Data/*")
 
     # Initialize the inventory for event
@@ -40,6 +41,7 @@ if __name__ == "__main__":
     print(f"All events are processed starting from {param['start_time_series']}h"
           f"after the origin of the earthquake and for a duration of {param['end_time_series']}h")
     # Begin loop on all events/asdf files
+    print(events)
     for _i, event_path in enumerate(events):
         # Print some stuff here
         event = os.path.basename(event_path)
@@ -55,20 +57,22 @@ if __name__ == "__main__":
         with pyasdf.ASDFDataSet(filename_asdf_pro, compression="gzip-3", mode='r+') as ds:
             for stations in ds.waveforms:
                 # Reconstruct inventory
+                inv2 = stations.StationXML
                 inv += stations.StationXML
 
                 st = stations.raw_waveform
                 # Select the waveform data
                 for i, tr in enumerate(st):
-                    NFFT = 2 ** (math.ceil(math.log(tr.stats.npts, 2)))
+                    
 
                     # demean/detrend
                     tr = tr.detrend('demean')
                     tr = tr.detrend('linear')
                     
                     # Remove instrument respones
-                    tr = tr.remove_response(inventory=inv, output='ACC', water_level=60, plot=False,
-                                            pre_filt=[0.0001, 0.00011, 0.0051, 0.0052])
+                    # Remove the response in the frequency domain as this adds noise
+                    # tr = tr.remove_response(inventory=inv, output='ACC', water_level=60, plot=False,
+                    #                        pre_filt=[0.0001, 0.00011, 0.0051, 0.0052])
 
                     # Removing detiding because tides out of band
                     # detiding_ds = int(1/(0.0001*2*tr.stats.delta))
@@ -78,17 +82,27 @@ if __name__ == "__main__":
                     tr = PSD.trim_tr(tr, param['start_time_series'], param['end_time_series'], plot=False) # Trim
                     tr = tr.taper(type=param['taper_type'], max_percentage=fact)
                     tr = tr.detrend('linear')
+                    length = 400
+                    tr.data = np.pad(tr.data, (
+                        int((length * 400 * 24 / 10. - tr.stats.npts) / 2.),
+                        int((length * 400 * 24 / 10. - tr.stats.npts) / 2.)), 'edge')
+                    NFFT = 2 ** (math.ceil(math.log(tr.stats.npts, 2)))
                                         
                     # Compute fft
                     f, acc = periodogram(tr.data, fs=tr.stats.sampling_rate, nfft=NFFT,
                                        scaling='spectrum')
                     f, acc = f[1:], acc[1:]
 
+                    inv_resp = inv2.get_response(tr.id, tr.stats.starttime)
+                    resp, _ = inv_resp.get_evalresp_response(tr.stats.delta, NFFT, 'ACC')
+                    resp = resp[1:]
+                    acc /= np.abs(resp)
+                    acc_fil= acc
                     # Hann windowing in frequency
-                    acc_fil = np.zeros(len(acc), dtype=float)
-                    for i in range(0,len(f)):
-                        hann_coeff = PSD.hann(f[i], f1, f12, f21, f2)
-                        acc_fil[i] = hann_coeff*acc[i]
+                    #acc_fil = np.zeros(len(acc), dtype=float)
+                    #for i in range(0,len(f)):
+                    #    hann_coeff = PSD.hann(f[i], f1, f12, f21, f2)
+                    #    acc_fil[i] = hann_coeff*acc[i]
 
                     # Convert units to nm/s/s
                     acc_amp = np.sqrt(acc_fil) * 1.e9
@@ -114,12 +128,12 @@ if __name__ == "__main__":
                         f, pres = periodogram(pr.data, fs=pr.stats.sampling_rate, nfft=NFFT,
                                            scaling='spectrum')
                         f, pres = f[1:], pres[1:]
-
+                        pres_fil = pres
                         # Hann windowing in the frequency domain
-                        pres_fil = np.zeros(len(acc), dtype=float)
-                        for i in range(0,len(f)):
-                            hann_coeff = PSD.hann(f[i], f1, f12, f21, f2)
-                            pres_fil[i] = hann_coeff*pres[i]
+                        #pres_fil = np.zeros(len(acc), dtype=float)
+                        #for i in range(0,len(f)):
+                        #    hann_coeff = PSD.hann(f[i], f1, f12, f21, f2)
+                        #    pres_fil[i] = hann_coeff*pres[i]
 
                         pres_amp = np.sqrt(pres_fil)
                         f *= 1000. # We back in mHz
@@ -142,15 +156,15 @@ if __name__ == "__main__":
                         frequencies = f
 
                         # Plot to check
-                        # fig = plt.figure(1,figsize=(12,12))
-                        # plt.plot(f,np.abs(acc_win), label='Uncorrected')
-                        # plt.plot(f,spectrum, label='Corrected')
-                        # plt.xlabel('Frequency (mHz)')
-                        # plt.ylabel('Acceleration (nm/s/s)')
-                        # plt.title((tr.id).replace('.',' '))
-                        # plt.legend()
-                        # plt.savefig(f"{param['basedir']}/Figures/Spectra/{event}/{tr.id}.png",format='PNG',dpi=400)
-                        # plt.close()
+                        fig = plt.figure(1,figsize=(12,12))
+                        plt.plot(f,np.abs(acc_win), label='Uncorrected')
+                        plt.plot(f,spectrum, label='Corrected')
+                        plt.xlabel('Frequency (mHz)')
+                        plt.ylabel('Acceleration (nm/s/s)')
+                        plt.title((tr.id).replace('.',' '))
+                        plt.legend()
+                        plt.savefig(f"{param['basedir']}/Figures/Spectra/{event}/{tr.id}.png",format='PNG',dpi=400)
+                        plt.close()
                         # plt.show()
                         
                     except pyasdf.WaveformNotInFileException as e:
@@ -168,15 +182,17 @@ if __name__ == "__main__":
                         # plt.savefig(f"{param['basedir']}/Figures/Spectra/{event}/{tr.id}.png",format='PNG',dpi=400)
                         # plt.close()
                         # plt.show()
-
-                # Write spectra as auxiliary data
-                datatype = "ProcessedSpectra"
-                datapath = tr.id
-                dataparams = {
-                    "start_freq": f[0],
-                    "nfreq": len(f),
-                    "dfreq": f[2]-f[1]}
-                ds.add_auxiliary_data(data=spectrum, data_type=datatype,
+                try:
+                    # Write spectra as auxiliary data
+                    datatype = "ProcessedSpectra"
+                    datapath = tr.id
+                    dataparams = {
+                        "start_freq": f[0],
+                        "nfreq": len(f),
+                        "dfreq": f[2]-f[1]}
+                    ds.add_auxiliary_data(data=spectrum, data_type=datatype,
                                       path=datapath, parameters=dataparams)
+                except:
+                    pass
                 
             print(ds)
