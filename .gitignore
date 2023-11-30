@@ -11,3 +11,5 @@ CTestTestfile.cmake
 _deps
 *.h5
 Scripts/1_SyntheticComputation/matrices
+__pycache__
+*.*~
