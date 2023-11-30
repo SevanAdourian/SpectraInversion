@@ -10,3 +10,6 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 *.h5
+*.*~
+__pycache__
+Scripts/1_SyntheticComputation/matrices
