@@ -15,3 +15,6 @@ taper_time_factor     : 0.5
 low_corner : 0.25 # in mHz
 high_corner: 1.0  # in mHz
 corners: 4
+
+# Adjoint sources
+starting_model: '1D'
