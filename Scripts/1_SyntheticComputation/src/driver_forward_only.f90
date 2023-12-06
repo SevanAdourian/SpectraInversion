@@ -356,7 +356,7 @@ program driver_forward_only
   ! fixed values of mex and qex from David's thesis:
   mex = 5
   qex = 4
-  call fcal_new(f1,f2,dt,t2,mex,qex,df,ep,nt,i1,i2)
+  call fcal(f1,f2,dt,t2,mex,qex,df,ep,nt,i1,i2)
   wr1     = pi2*f1
   wr2     = pi2*f2
   dwr     = pi2*df
@@ -508,16 +508,18 @@ program driver_forward_only
      enddo
 
      if (dper(iper) .eq. 0) then
-        filename = trim(odir)//'1D/'//trim(hdr(1)%name)//'.dat'
+        filename = trim(odir)//'201103110546A/1D/'//trim(hdr(1)%name)//'.dat'
      else
-        filename = trim(odir)//'SP12/'//trim(hdr(1)%name)//'.dat'
+        filename = trim(odir)//'201103110546A/SP12/'//trim(hdr(1)%name)//'.dat'
      end if
      
      print*, filename
      open(211,file=trim(filename),action='write',status='replace')
      do i=1,nt
-        write(211,*) for_wr(i)*1000/(2.*pi)*f_norm, &
-             dble(acl_raw(iper,i,1)), aimag(acl_raw(iper,i,1)), abs(acl_raw(iper,i,1))
+        write(211,*) for_wr(i)*1000.*f_norm/pi2, &
+             dble(acl_raw(iper,i,1))*a_norm, &
+             aimag(acl_raw(iper,i,1))*a_norm, &
+             abs(acl_raw(iper,i,1)*a_norm)
      end do
      close(211)
      

@@ -218,11 +218,13 @@ if __name__ == "__main__":
                     acc_fil= acc
                 
                     # Convert units to nm/s/s
-                    acc_amp = np.sqrt(acc_fil) * 1.e9
-                    f *= 1000.
-                    acc_win = acc_amp[(f >= param['low_corner']) & (f <= param['high_corner'])]
-                    f = f[(f >= param['low_corner']) & (f <= param['high_corner'])]
-                    
+                    acc_amp = np.sqrt(acc_fil) # * 1.e9
+                    # f *= 1000.
+                    f1f = param['low_corner']/1.e3
+                    f2f = param['high_corner']/1.e3
+                    acc_win = acc_amp[(f >= f1f) & (f <= f2f)]
+                    f = f[(f >= f1f) & (f <= f2f)]
+
                     spectrum = np.abs(acc_win)
                     frequencies = f
                     
@@ -238,14 +240,15 @@ if __name__ == "__main__":
                     # plt.show()
                 try:
                     # Write spectra as auxiliary data
+                    print(f"Writing spectrum information for station")
                     datatype = "ProcessedSpectra"
                     datapath = tr.id
                     dataparams = {
                         "start_freq": f[0],
                         "nfreq": len(f),
-                        "dfreq": f[2]-f[1]}
-                    # ds.add_auxiliary_data(data=spectrum, data_type=datatype,
-                    #                   path=datapath, parameters=dataparams)
+                        "dfreq": (f[2]-f[1])}
+                    ds.add_auxiliary_data(data=spectrum, data_type=datatype,
+                                      path=datapath, parameters=dataparams)
                 except:
                     pass
                 

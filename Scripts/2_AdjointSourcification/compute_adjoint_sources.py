@@ -79,36 +79,47 @@ def is_synthetic_computed(conf, event, stn, comp):
         print(f"Skipping...")
     return synth_ok
 
-def process_synthetic(conf, synth_spec, dt, t1, t2, t12, t21, ep):
+
+def process_synthetic(conf, synth_spec, dt, dt_data,
+                      t1, t2, t12, t21, ep):
 
     # Do ifft to get seismogram in time domain (real part)
     ns = len(synth_spec.real)
+    
     synth_spec_complex = np.zeros(ns, dtype=complex)
     synth_spec_complex.real = synth_spec.real
     synth_spec_complex.imag = synth_spec.imag
-    synth_seismo = np.fft.irfft(synth_spec_complex)
-    synth_seismo = np.real(synth_seismo)
 
-    # Compute time support array
-    time_support = np.arange(0, dt*len(synth_spec.real)-1e-6, dt)
+    NFFT = 2 ** (math.ceil(math.log(ns, 2)))
+    synth_seismo = np.fft.irfft(synth_spec_complex, n=NFFT, norm='backward')
     
+    # Compute time support array
+    time_support = np.arange(0, conf['end_time_series_synth']*3600, dt)
+    data_time_array = np.arange(0, time_support[-1], dt_data)
+    
+    # Interpolate on the same time support as the data
+    synth_seismo = np.real(synth_seismo[:len(time_support)])
+    interpolator = interp1d(time_support, synth_seismo, kind='cubic', fill_value='extrapolate')
+    synth_seismo_int = interpolator(data_time_array)
+
     # Correct epsilon and time domain
-    synth_seismo_windowed = np.zeros(ns)
-    for i,t_value in np.ndenumerate(time_support):
-        hann_coeff = PSD.hann(t_value, t1, t12, t21, t2)
-        synth_seismo_windowed[i] = hann_coeff*synth_seismo[i]*np.exp(-ep*t_value)
+    synth_seismo_windowed = np.zeros(len(data_time_array))
+    for i,t_value in np.ndenumerate(data_time_array):
+        hann_coeff = PSD.hann(t_value, t1, t12, t21, t2)/np.pi
+        synth_seismo_windowed[i] = hann_coeff*synth_seismo_int[i]*np.exp(ep*t_value)/(2*np.pi)
 
     # Back to spectral domain (fft)
-    processed_synth_spec = np.fft.fft(synth_seismo_windowed)
-    f = np.fft.fftfreq(ns, d=dt)
-    # Window in frequency domain
-    processed_synth_spec = processed_synth_spec[(f >= param['low_corner']/1e3) & (f <= (param['high_corner']+0.2)/1e3)]
-    freq_support_pro = f[(f >= param['low_corner']/1e3) & (f <= (param['high_corner']+0.2)/1e3)]
+    # Pad to make it look good
+    NFFT = 2 ** (math.ceil(math.log(len(synth_seismo_windowed), 2))+3)
+    processed_synth_spec = np.fft.fft(synth_seismo_windowed, n=NFFT, norm='backward')
+    f = np.fft.fftfreq(NFFT, d=dt_data)
 
-    # processed_synth_spec = synth_seismo
+    # Window in frequency domain
+    processed_synth_spec = processed_synth_spec[(f >= param['low_corner']/1e3) & (f <= (param['high_corner'])/1e3)]
+    freq_support_pro = f[(f >= param['low_corner']/1e3) & (f <= (param['high_corner'])/1e3)]
     
-    # return time_support, processed_synth_spec
     return freq_support_pro,processed_synth_spec
+
 
 # def compute_misfit(processed_synth_spec, data_spec_ds):
 
@@ -139,7 +150,7 @@ if __name__ == "__main__":
     f1_inp = param['minimum_frequency']
     f2_inp = param['maximum_frequency']/1.e3
     t1_inp = param['start_time_series'] * 3600.
-    t2_inp = param['end_time_series'] * 3600.
+    t2_inp = param['end_time_series_data'] * 3600.
     dt = 1. / (2.*f2_inp)
     
     facf = param['taper_frequency_factor']
@@ -150,7 +161,7 @@ if __name__ == "__main__":
 
     # Useful for rescaling synthetic - due to technical considerations of IDSM
     mex = 5
-    ep = mex/t2_inp
+    ep = mex/(param['end_time_series_synth'] * 3600.)
         
     # Computation of all parameters
     f12 = f1+facf*(f2-f1)
@@ -187,16 +198,16 @@ if __name__ == "__main__":
                         print(f"Loading synthetic spectra...")
                         synth_spectrum = load_synthetic(param, event, stn)
                         
-                        # Process synthetic spectra the same way as data to be consistent
-                        freq_pro, synth_spectrum_pro = process_synthetic(param, synth_spectrum, dt,
-                                                                           t1_inp, t2_inp, t21, t12, ep)
-                        # plt.plot(time_array/3600., synth_spectrum_pro)
-                        
                         # Now let's load data
                         freq_data, data_spec = load_data(spec_ds)
+
+                        # Process synthetic spectra the same way as data to be consistent
+                        freq_pro, synth_spectrum_pro = process_synthetic(param, synth_spectrum, dt, 1,
+                                                                           t1_inp, t2_inp, t21, t12, ep)
+                        
                         plt.figure()
-                        plt.plot(freq_pro*1e3, np.abs(synth_spectrum_pro)/1000/np.pi)
-                        plt.plot(freq_data,data_spec/1e9)
+                        plt.plot(freq_pro*1e3, np.abs(synth_spectrum_pro))
+                        plt.plot(freq_data*1e3,data_spec)
                         plt.show()
                         
                         # Compute L2-misfit between synth and data

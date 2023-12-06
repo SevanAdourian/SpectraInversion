@@ -6,7 +6,7 @@ is_crust = .FALSE.
 is_cmb = .FALSE.
 model_3d = "lay808"
 model_3dQ = "dummy"
-mat_op = 2
+mat_op = 1
 sbuild0 = 0
-sbuild1 = 6
+sbuild1 = 12
 /

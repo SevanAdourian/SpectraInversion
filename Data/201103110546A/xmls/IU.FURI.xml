@@ -5,14 +5,14 @@
   <Sender>IRIS-DMC</Sender>
   <Module>IRIS WEB SERVICE: fdsnws-station | version: 1.1.52</Module>
   <ModuleURI></ModuleURI>
-  <Created>2023-11-29T01:01:59.9987</Created>
+  <Created>2023-12-06T01:38:53.9736</Created>
   <Network code="IU" startDate="1988-01-01T00:00:00.0000" restrictedStatus="open">
    <Description>Global Seismograph Network - IRIS/USGS (GSN)</Description>
    <Identifier type="DOI">10.7914/SN/IU
    </Identifier>
    <TotalNumberStations>128</TotalNumberStations>
    <SelectedNumberStations>1</SelectedNumberStations>
-   <Station code="FURI" startDate="1997-09-01T00:00:00.0000" restrictedStatus="open" iris:alternateNetworkCodes="_FDSN,_FDSN-ALL,_GSN,_GSN-BROADBAND,_STS-1,.UNRESTRICTED">
+   <Station code="FURI" startDate="1997-09-01T00:00:00.0000" restrictedStatus="open" iris:alternateNetworkCodes="_FDSN,_FDSN-ALL,_GSN,_GSN-BROADBAND,_REALTIME,_STS-1,.UNRESTRICTED">
     <Description>(GSN) IRIS/USGS (IU), MEDNET, Addis Ababa Univ</Description>
     <Latitude>8.8952</Latitude>
     <Longitude>38.6798</Longitude>

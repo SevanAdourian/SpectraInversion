@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import yaml
+import sys
 
 def load_yaml_file(file_path):
     with open(file_path, 'r') as file:
@@ -187,7 +188,7 @@ def fcal(f1, f2, dt, tout, mex, qex):
 def hann(t, t11, t12, t21, t22):
     if t11 == 0.0 and t12 == 0.0 and t21 == 0.0 and t22 == 0.0:
         return 0.0
-    
+
     if t < t11:
         return 0.0
     elif t >= t11 and t < t12:

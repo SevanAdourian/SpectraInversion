@@ -76,6 +76,59 @@ CONTAINS
 
   END SUBROUTINE fcal
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  ! SUBROUTINE fcal(f1,f2,dt,tout,mex,qex,df,ep,nt,i1,i2)
+    
+  !   implicit none
+    
+  !   real*8, intent(inout) :: f1,f2
+  !   real*8, intent(in) :: dt,tout
+  !   integer, intent(in) :: mex,qex
+  !   real*8, intent(out) :: df,ep
+  !   integer, intent(out) :: nt,i1,i2
+  !   integer :: ne
+  !   real*8 :: fn
+
+  !   ! check that the Nyquist frequency for the given
+  !   ! value of dt lies above f2
+  !   fn = sngl(0.5)/dt
+  !   if(fn < f2) stop &
+  !    ' f2 is greater than the Nyquist frequency for the time step'
+
+  !   ep = mex/tout
+  !   write(*,*) "ep=",ep/t_norm
+  !   df = ep/(pi2*qex)
+  !   write(*,*) "df=",df
+  !   nt = sngl(1.0)/(df*dt)
+  !   write(*,*) "nt=",nt
+  !   ne = log(real(nt))/log(sngl(2.0))+1
+  !   write(*,*) "ne=",ne
+  !   nt = 2**ne
+  !   write(*,*) "nt2=",nt
+
+  !   df = sngl(1.0)/(nt*dt)
+  !   write(*,*) "df=",df
+  !   ! Applying Nyquist here
+  !   ! df = sngl(1.0)/(2*nt*dt)
+  !   i1 = max(floor(f1/df),1)
+  !   write(*,*) "i1=",i1
+  !   f1 = (i1-1)*df
+
+  !   i2 = floor(f2/df)+2
+  !   write(*,*) "i2=",i2
+  !   f2 = (i2-1)*df
+
+  !   write(*,*) '.... Frequency parameters:'
+  !   write(*,*) '.... ... df (mHz) =',df
+  !   write(*,*) '.... ... nt       =',nt
+  !   write(*,*) '.... ... f1 (mHz) =',f1
+  !   write(*,*) '.... ... f2 (mHz) =',f2
+
+
+  !   return
+
+  ! END SUBROUTINE fcal
+
   !===========================================================!
   SUBROUTINE fcal_new(f1,f2,dt,tout,mex,qex,df,ep,nt,i1,i2)
     
