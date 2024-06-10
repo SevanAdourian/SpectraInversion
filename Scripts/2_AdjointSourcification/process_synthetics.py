@@ -70,6 +70,6 @@ if __name__ == "__main__":
 
 
 # Load associate data
-file = open("C060994A_IU_AFI_60.pkl", 'rb')
-obj_file = pickle.load(file)
+# file = open("C060994A_IU_AFI_60.pkl", 'rb')
+# obj_file = pickle.load(file)
 
