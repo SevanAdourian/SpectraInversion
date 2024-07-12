@@ -112,9 +112,9 @@ if __name__ == "__main__":
                     tr = PSD.trim_tr(tr, param['start_time_series'], param['end_time_series'], plot=False) # Trim
                     tr = tr.taper(type=param['taper_type'], max_percentage=fact)
                     tr = tr.detrend('linear')
-
                     # tr.plot()
                     # IBPM Pressure correction here, if exists
+
                     # Check if we can do barometric corrections
                     try:
                         pr = stations.pressure[0]
@@ -241,12 +241,14 @@ if __name__ == "__main__":
                 try:
                     # Write spectra as auxiliary data
                     print(f"Writing spectrum information for station")
+
                     datatype = "ProcessedSpectra"
                     datapath = tr.id
                     dataparams = {
                         "start_freq": f[0],
                         "nfreq": len(f),
                         "dfreq": (f[2]-f[1])}
+
                     ds.add_auxiliary_data(data=spectrum, data_type=datatype,
                                       path=datapath, parameters=dataparams)
                 except:
