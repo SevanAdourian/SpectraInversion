@@ -1,3 +1,4 @@
+
 import numpy as np
 import os
 import yaml
@@ -72,9 +73,9 @@ class Config:
 
         return
 
-    def setup_run(self, filepath_yaml):
+    def setup_run(self, conf_py):
         try:
-            conf_py = load_yaml_file(filepath_yaml)
+            # conf_py = load_yaml_file(filepath_yaml)
             # Set additional parameters
             mex = 5
             qex = 4
@@ -92,13 +93,13 @@ class Config:
             f1, f2, df, ep, nt, i1, i2 = self.fcal(f1_inp, f2_inp, dt_inp, t2_inp, mex, qex)
 
             # Set calculated attributes
-            window_frequency_parameter = conf_py['window_frequency_parameter']
+            window_frequency_parameter = conf_py['taper_frequency_factor']
             f12 = f1 + window_frequency_parameter * (f2 - f1)
             f21 = f2 - window_frequency_parameter * (f2 - f1)
 
-            window_time_parameter = conf_py['window_time_parameter']
-            t1 = conf_py['t1_hann_window']*(3600. / tscale)
-            t2 = conf_py['t2_hann_window']*(3600. / tscale)
+            window_time_parameter = conf_py['taper_time_factor']
+            t1 = conf_py['start_time_series']*(3600. / tscale)
+            t2 = conf_py['end_time_series']*(3600. / tscale)
             t12 = t1 + window_time_parameter * (t2 - t1)
             t21 = t2 - window_time_parameter * (t2 - t1)
             ntall = 2*nt - 1
@@ -120,8 +121,7 @@ class Config:
 
         ep = mex / tout
         df = ep / (2.0 * np.pi * qex)
-        # nt = int(np.floor(1.0 / (df * dt)))
-
+        
         i1 = np.floor(f1 / df)
         f1 = i1 * df
 
@@ -131,6 +131,33 @@ class Config:
         nt = int((i2-i1)+1)
 
         return f1, f2, df, ep, nt, i1, i2
+
+    # def fcal(self, f1, f2, dt, tout, mex, qex):
+    #     # All must be normalized here
+    #     fn = 0.5 / dt
+
+    #     if fn < f2:
+    #         raise ValueError("f2 is greater than the Nyquist frequency for the time step")
+
+    #     ep = mex / tout
+    #     df = ep / (2.0 * np.pi * qex)
+
+    #     # old fcal
+    #     nt = int(np.floor(1.0 / (df * dt)))
+    #     ne = int(np.log(float(nt))/np.log(2.0)+1)
+    #     nt = int(2**ne)
+    #     df = 1/(nt*dt)
+        
+    #     i1 = np.floor(f1 / df)
+    #     f1 = i1 * df
+
+    #     i2 = np.ceil(f2 / df)
+    #     f2 = i2 * df
+
+    #     nt = int((i2-i1)+1)
+
+    #     pdb.set_trace()
+    #     return f1, f2, df, ep, nt, i1, i2
 
     def __repr__(self):
         return f"Config({self.__dict__})"
@@ -156,9 +183,14 @@ class Spectrum:
                     if line.strip():  # Skip empty lines
                         columns = line.split()
                         frequency.append(float(columns[0]) / 1000. / param.fscale)
-                        real.append(float(columns[1]))
-                        imag.append(float(columns[2]))
-                        abs_val.append(np.abs(complex(float(columns[1]), float(columns[2]))))
+                        repa = float(columns[1])
+                        impa = float(columns[2])
+                        # real.append(float(columns[1]))
+                        # imag.append(float(columns[2]))
+                        # abs_val.append(np.abs(complex(float(columns[1]), float(columns[2]))))
+                        real.append(repa)
+                        imag.append(impa)
+                        abs_val.append(np.abs(complex(repa, impa)))
                         
             self.frequency = np.array(frequency)
             self.realpart = np.array(real)
@@ -181,12 +213,12 @@ class Spectrum:
         for i in range(len(ftapered_fun)):
             hann_coeff = hann(self.frequency[i], params.f1, params.f12,
                                   params.f21, params.f2)
-            ftapered_fun[i] = hann_coeff*fun[i]
+            ftapered_fun[i] = hann_coeff*fun[i]*params.anorm
             
         if (plotting == True):
             plt.figure()
-            plt.plot(self.frequency, np.abs(fun), label='untapered')
-            plt.plot(self.frequency, np.abs(ftapered_fun), label='tapered')
+            plt.plot(self.frequency*params.fscale*1000., np.abs(fun), label='untapered')
+            plt.plot(self.frequency*params.fscale*1000., np.abs(ftapered_fun), label='tapered')
             if (saveplot == True):
                 plt.savefig('tapered_spectra.png', dpi=400)
                 
@@ -200,18 +232,18 @@ class Spectrum:
         ftapered_fun_with_neg[params.nt:] = np.flipud(np.conjugate(ftapered_fun_cplx))[:-1]
         
         # Calculate the inverse Fourier transform
-        fun_ifft = np.fft.ifft(ftapered_fun_with_neg)
+        fun_ifft = np.fft.ifft(ftapered_fun_with_neg, norm='forward') * (1./(params.dt*params.ntall))
         
         # Undoing the exponential decay necessary during the synthetic computation
         # Doing it here because it is only specific to the synthetics
         timeseries = TimeSeries()
         
         # Re-normalization of time and data
-        timeseries.times = np.arange(0, (params.ntall-1)*params.dt, params.dt)
+        timeseries.times = np.arange(0, (params.ntall)*params.dt, params.dt)
         timeseries.data = np.zeros(params.ntall,dtype=complex)
         
         for i,t_value in np.ndenumerate(timeseries.times):
-            timeseries.data[i] = fun_ifft[i]*np.exp(params.ep*t_value)
+            timeseries.data.real[i] = fun_ifft.real[i]*np.exp(params.ep*t_value)
             
         return timeseries
 
@@ -231,14 +263,17 @@ class TimeSeries:
             
         if (plotting == True):
             plt.figure()
-            plt.plot(self.times*params.tscale/3600., ts_tapered_fun*params.anorm, label='tapered')
+            plt.plot(self.times*params.tscale/3600., ts_tapered_fun, label='tapered')
             if (saveplot == True):
                 plt.savefig('tapered_timeseries.png', dpi=400)
             
             plt.show()
-    
-        tapered_spectrum = np.fft.fft(ts_tapered_fun)
-        frequency_array = np.fft.fftfreq(n=params.ntall, d=params.dt)
+
+        tapered_spectrum = np.fft.fft(ts_tapered_fun.real, norm='backward') * params.dt
+        frequency_array = np.fft.fftfreq(n=params.ntall, d=params.dt*params.tscale)
+        
+        # tapered_spectrum = np.fft.rfft(ts_tapered_fun)
+        # frequency_array = np.fft.rfftfreq(n=params.ntall, d=params.dt)
         
         processed_spectrum = Spectrum(frequency=frequency_array[0:params.nt],
                                       real_part=tapered_spectrum.real[0:params.nt],
@@ -275,7 +310,7 @@ class TimeSeries:
         trimmed_trace.times = times
 
         bool_trimming = (times < start_trim) & (times > end_trim)
-        data[bool_trimming] = 0.d0
+        data[bool_trimming] = 0.0
         trimmed_trace.data = data
 
         # if plot == True:
