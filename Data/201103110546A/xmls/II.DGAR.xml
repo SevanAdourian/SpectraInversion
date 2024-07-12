@@ -5,14 +5,14 @@
   <Sender>IRIS-DMC</Sender>
   <Module>IRIS WEB SERVICE: fdsnws-station | version: 1.1.52</Module>
   <ModuleURI></ModuleURI>
-  <Created>2023-11-29T01:01:58.5449</Created>
+  <Created>2023-12-06T01:38:52.3867</Created>
   <Network code="II" startDate="1986-01-01T00:00:00.0000" restrictedStatus="open">
    <Description>Global Seismograph Network - IRIS/IDA (GSN)</Description>
    <Identifier type="DOI">10.7914/SN/II
    </Identifier>
    <TotalNumberStations>59</TotalNumberStations>
    <SelectedNumberStations>1</SelectedNumberStations>
-   <Station code="DGAR" startDate="2004-01-22T00:00:00.0000" restrictedStatus="open" iris:alternateNetworkCodes="_FDSN-ALL,_GSN,_GSN-BROADBAND,_REALTIME,_STS-1,.UNRESTRICTED">
+   <Station code="DGAR" startDate="2004-01-22T00:00:00.0000" restrictedStatus="open" iris:alternateNetworkCodes="_FDSN-ALL,_GSN,_GSN-BROADBAND,_STS-1,.UNRESTRICTED">
     <Latitude>-7.4121</Latitude>
     <Longitude>72.4525</Longitude>
     <Elevation>1.0</Elevation>

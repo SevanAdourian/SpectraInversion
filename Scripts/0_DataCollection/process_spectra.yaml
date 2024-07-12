@@ -1,7 +1,5 @@
 basedir: '/data/SA/SpectraInversion/'
 
-minimum_frequency: 0.00 # in mHz
-maximum_frequency: 1.00 # in mHz
 start_time_series: 5
 end_time_series  : 96
 
@@ -13,5 +11,5 @@ taper_time_factor     : 0.5
 
 # Filtering
 low_corner : 0.25 # in mHz
-high_corner: 1.0  # in mHz
+high_corner: 1.5  # in mHz
 corners: 4
